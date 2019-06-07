@@ -1,0 +1,8 @@
+version: 4.2.10
+files:
+  - url: electron Setup 4.2.10.exe
+    sha512: ncmt1UrJSfzj+r9/GDnJ8v5pGyAt+82hPBcsVrAl/hh77O5R9vpc+yGrU5gcFIQAKjHh7kY4y3t++7hfr+0ilw==
+    size: 42681885
+path: electron Setup 4.2.10.exe
+sha512: ncmt1UrJSfzj+r9/GDnJ8v5pGyAt+82hPBcsVrAl/hh77O5R9vpc+yGrU5gcFIQAKjHh7kY4y3t++7hfr+0ilw==
+releaseDate: '2019-06-02T03:27:41.646Z'

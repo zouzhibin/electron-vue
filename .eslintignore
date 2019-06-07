@@ -1,0 +1,7 @@
+.electron-vue/
+.vscode/
+build/
+config/
+dist/
+src/assets/fonts
+static/
