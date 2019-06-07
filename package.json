@@ -19,7 +19,7 @@
     "postinstall": "",
     "win": "yarn run build:clean&&yarn run pack&&yarn run build"
   },
-   "pre-commit": "yarn run lint",
+   "pre-commit": "lint",
   "build": {
     "productName": "electron",
     "appId": "com.example.yourapp",
