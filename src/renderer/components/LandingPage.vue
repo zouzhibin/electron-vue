@@ -25,7 +25,7 @@ export default {
         console.log('dd', message, data)
         switch (message) {
         case 'checking-for-update':
-          console.log('开始执行更新')
+          console.log("开始执行更新")
           break
         case 'download-progress':
           console.log('进度下载', data)
