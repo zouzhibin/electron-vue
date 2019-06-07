@@ -21,8 +21,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run lint:fix"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint",
+      "git add"
+    ]
   },
   "build": {
     "productName": "electron",
