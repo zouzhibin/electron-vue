@@ -19,8 +19,10 @@
     "postinstall": "",
     "win": "yarn run build:clean&&yarn run pack&&yarn run build"
   },
-  "hooks": {
-    "pre-commit": "yarn run lint:fix"
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run lint:fix"
+    }
   },
   "build": {
     "productName": "electron",
