@@ -1,10 +1,17 @@
-import { ipcMain, BrowserWindow } from 'electron'
+import { app, ipcMain, BrowserWindow } from 'electron'
 import { autoUpdater } from 'electron-updater'
-const updateUrl = 'http://192.168.1.69:3333' // 正式更新包位置
+let path = require("path")
+const updateUrl = 'https://github.com/zouzhibin/electron-vue/tree/master/client' // 正式更新包位置
+// const updateUrl = 'https://app.mamahao.com/pos/test';  // 测试更新包位置
 
 function checkForUpdates () {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = false
+  // 进行判断市开发环境的时候 手动添加app-update.yml到该目录下 要不然在开发环境会报错找不到该文件
+  if( process.env.NODE_ENV === 'development'){
+    autoUpdater.updateConfigPath = path.join(__dirname, 'app-update.yml');
+    console.log('路径',path.join(__dirname, 'app-update.yml'))
+  }
   // 配置安装包远端服务器
   autoUpdater.setFeedURL(updateUrl)
   // 执行自动更新检查
@@ -49,6 +56,7 @@ function checkForUpdates () {
   })
   // 监听渲染进程传来的检查更新命令
   ipcMain.on('checkForUpdates', (e, arg) => {
+
     if (autoUpdater.updating === 1) {
       sendRenderMessage('updateing')
     } else {
@@ -69,3 +77,7 @@ function sendRenderMessage (message, data) {
     BrowserWindow.getAllWindows()[0].webContents.send('update-message', { message, data })
   }
 }
+
+app.on('ready', () => {
+  setTimeout(checkForUpdates, 1000)
+})

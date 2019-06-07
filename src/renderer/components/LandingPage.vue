@@ -2,9 +2,13 @@
   <div id="wrapper">
     <main>
       <div class="right-side">
+        <p>版本号:{{version}}</p>
         <button @click="checkUpdata">
           点击立即更新
         </button>
+        <p>下载进度{{percent}}</p>
+        <p @click="downLoad"><a ></a>路径:{{updateUrl}}</p>
+        <button @click="install">立即下载</button>
       </div>
     </main>
   </div>
@@ -13,34 +17,84 @@
 <script>
 // import SystemInformation from './LandingPage/SystemInformation'
 import { ipcRenderer } from 'electron'
+const { app } =  require('electron').remote
+import axios from 'axios'
+
 
 export default {
   name: 'LandingPage',
   // components: { SystemInformation },
+  data(){
+    return{
+      percent:0,
+      version:null,
+      updateUrl:null
+    }
+  },
+  created(){
+    console.log('版本号',app.getVersion())
+    this.version = app.getVersion()
+    this.getRemoteVersion().then((value)=>{
+      if(value){
+        this.updateUrl = 'http://192.168.0.104:3333/electron_' + `${value}` + '.exe'
+      }
+    })
+  },
   methods: {
+    downLoad(){
+      location.href=this.updateUrl
+    },
     checkUpdata () {
-      console.log(11)
-      ipcRenderer.send('checkForUpdates')
-      ipcRenderer.on('update-message', (event, { message, data }) => {
-        console.log('dd', message, data)
+      ipcRenderer && ipcRenderer.send('checkForUpdates')
+      ipcRenderer && ipcRenderer.on('update-message', (event, { message, data }) => {
+        console.log('update-message', message, data)
         switch (message) {
-        case 'checking-for-update':
-          console.log("开始执行更新")
-          break
-        case 'download-progress':
-          console.log('进度下载', data)
-          break
-        case 'update-available':
-          console.log('有版本更新')
-          break
-        case 'update-not-available':
-          console.log('没有版本更新')
-          break
+          case 'downloadProgress':
+            this.percent = data.percent.toFixed(2)
+                  console.log('更新进度',data.percent)
+            break
+          case 'isUpdateNow':
+            this.percent = '100.00'
+            break
+          case 'updateNowError':
+            if (this.updateUrl) {
+              this.$alert('请手动复制下载地址安装：' + this.updateUrl, '安装失败')
+            }
+            break
+          case 'updateing':
+          case 'update-available':
+            if (!this.dialogVisible) {
+              this.dialogVisible = true
+            }
+            break
         }
+      })
+    },
+    getRemoteVersion () {
+      return new Promise((resolve, reject) => {
+        // 创建一个axios示例
+        const fetch = axios.create()
+        fetch({
+          url: 'http://192.168.0.104:3333/latest.yml'
+        }).then(res => {
+                  let remoteVersion = null
+                  try {
+                    remoteVersion = JSON.stringify(res.data).split('\\n')[0].split(' ')[1]
+                    console.log('获取到的数据',remoteVersion)
+                  } catch (e) {
+                  }
+                  resolve(remoteVersion)
+                }, err => {
+                  resolve(null)
+                }
+        )
       })
     },
     open (link) {
       this.$electron.shell.openExternal(link)
+    },
+    install(){
+      ipcRenderer && ipcRenderer.send('updateNow')
     }
   }
 }

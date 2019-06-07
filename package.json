@@ -1,6 +1,6 @@
 {
   "name": "electron",
-  "version": "4.2.11",
+  "version": "4.2.26",
   "author": "zouzhibin <3517876561@qq.com>",
   "description": "An electron-vue project",
   "private": true,
@@ -27,6 +27,7 @@
   "build": {
     "productName": "electron",
     "appId": "com.example.yourapp",
+    "artifactName": "${productName}_${version}.${ext}",
     "directories": {
       "output": "build"
     },
@@ -48,8 +49,8 @@
     },
     "publish": [
       {
-        "provider": "generic",
-        "url": "http://192.168.1.69:3333"
+        "provider": "github",
+        "url": "https://github.com/zouzhibin/electron-vue/tree/master/client"
       }
     ],
     "files": [
